@@ -32,15 +32,14 @@ public final class Constants {
     }
 
 
-
     public static final class DriveConstants {
 
         public static enum DriveMode {
             TANK, ARCADE, SINGLE_STICK_LEFT, SINGLE_STICK_RIGHT;
         }
 
-        public static final int     LEFT_MOTOR_PORT      = 10;
-        public static final int     RIGHT_MOTOR_PORT     = 20;
+        public static final int     LEFT_MOTOR_PORT      = 3; // 4 for follower
+        public static final int     RIGHT_MOTOR_PORT     = 1; // 2 for follower
 
         public static final boolean LEFT_MOTOR_REVERSED  = false;
         public static final boolean RIGHT_MOTOR_REVERSED = true;
@@ -50,11 +49,23 @@ public final class Constants {
         public static final boolean GYRO_REVERSED        = false;
 
         /** Proportional gain for gyro pid tracking */
-        public static final double  GYRO_PID_KP          = 0;
+        public static final double  GYRO_PID_KP          = 0.015;
 
         public static final double  DRIVE_SCALING_BOOST  = 1;
         public static final double  DRIVE_SCALING_NORMAL = .6;
         public static final double  DRIVE_SCALING_SLOW   = .3;
     }
 
+    public static final class ArmConstants {
+        
+        public static final int     ARM_LIFT_MOTOR_PORT = 5;  // 6 for follower
+        public static final int     ARM_UPPER_LIMIT_SWITCH_PORT = 0;
+        public static final int     ARM_LOWER_LIMIT_SWITCH_PORT = 1;
+    }
+    
+    public static final class WristConstants {
+
+        public static final int WRIST_MOTOR_PORT = 7;
+        public static final int WRIST_LIMIT_SWITCH_PORT = 1;
+    }
 }
