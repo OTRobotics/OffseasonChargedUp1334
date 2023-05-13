@@ -4,35 +4,40 @@
 
 package frc.robot;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
+/** Add your docs here. */
 public final class Constants {
 
-  public static class DriveConstants {
-
-    public static final int Left1 = 3;
-    public static final int Left2 = 4;
-    public static final int Right1 = 1;
-    public static final int Right2 = 2;
-
+  public static final class OperatorInputConstants {
+  
+    public static final int DRIVER_CONTROLLER = 0;
+    public static final int OPERATOR_CONTROLLER = 1;
   }
 
-  public static class OperatorConstants {
+  public static final class DriveConstants {
+      
+    public static final int LEFT_MOTOR = 3;
+    public static final int LEFT_MOTOR_FOLLOWER = 4;
+    public static final int RIGHT_MOTOR = 1;
+    public static final int RIGHT_MOTOR_FOLLOWER = 2;
 
-    public static final int kDriverControllerPort = 0;
-    public static final int armMotorOne = 6;
-    public static final int armMotorTwo = 5;
-    public static final int wristMotor = 7;
-    public static final int intakeWheel = 8;
-    public static final int armLimitSwitch = 0;
-    public static final int armBottomSwitch = 2;
-    public static final int wristLimitSwitch = 1;
-    
+    public static final boolean LEFT_MOTOR_REVERSED = false;
+    public static final boolean RIGHT_MOTOR_REVERSED = true;
+
+    public static final double  CM_PER_ENCODER_COUNT = 3.503;   // change value after testing
   }
+
+  public static final class ArmConstants {
+
+    public static final int ARM_MOTOR = 6;
+    public static final int ARM_MOTOR_FOLLOWER = 5;
+    public static final int ARM_LIMIT_SWITCH_FRONT = 0;
+    public static final int ARM_LIMIT_SWITCH_BACK = 2;
+  }
+
+  public static final class WristConstants {
+
+    public static final int WRIST_MOTOR = 7;
+    public static final int WRIST_LIMIT_SWITCH = 6;
+  }
+
 }
