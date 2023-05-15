@@ -13,129 +13,152 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.OperatorInput;
-import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.OperatorInput;
 
 
 
 public class DriveSubsystem extends SubsystemBase {
 
-  // Left side motors
-  private final CANSparkMax leftPrimaryMotor = new CANSparkMax(DriveConstants.LEFT_MOTOR,
-  MotorType.kBrushless);
+    // Left side motors
+    private final CANSparkMax     leftPrimaryMotor   = new CANSparkMax(DriveConstants.LEFT_MOTOR,
+        MotorType.kBrushless);
 
-  private final CANSparkMax leftFollowerMotor = new CANSparkMax(DriveConstants.LEFT_MOTOR_FOLLOWER,
-    MotorType.kBrushless);
+    private final CANSparkMax     leftFollowerMotor  = new CANSparkMax(DriveConstants.LEFT_MOTOR_FOLLOWER,
+        MotorType.kBrushless);
 
-  // Right side motors
-  private final CANSparkMax rightPrimaryMotor = new CANSparkMax(DriveConstants.RIGHT_MOTOR,
-    MotorType.kBrushless);
+    // Right side motors
+    private final CANSparkMax     rightPrimaryMotor  = new CANSparkMax(DriveConstants.RIGHT_MOTOR,
+        MotorType.kBrushless);
 
-  private final CANSparkMax rightFollowerMotor = new CANSparkMax(DriveConstants.RIGHT_MOTOR_FOLLOWER,
-    MotorType.kBrushless);
+    private final CANSparkMax     rightFollowerMotor = new CANSparkMax(DriveConstants.RIGHT_MOTOR_FOLLOWER,
+        MotorType.kBrushless);
 
-  private double leftSpeed = 0;
-  private double rightSpeed = 0;
+    private double                leftSpeed          = 0;
+    private double                rightSpeed         = 0;
 
-  // Drive encoders
-  private final RelativeEncoder leftEncoder = leftPrimaryMotor.getEncoder();
-  private final RelativeEncoder rightEncoder  = rightPrimaryMotor.getEncoder();
+    // Drive encoders
+    private final RelativeEncoder leftEncoder        = leftPrimaryMotor.getEncoder();
+    private final RelativeEncoder rightEncoder       = rightPrimaryMotor.getEncoder();
 
-  // Gyro
-  private AHRS ahrs = new AHRS(SPI.Port.kMXP);
+    // Gyro
+    private AHRS                  ahrs               = new AHRS(SPI.Port.kMXP);
 
 
-  /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+    /** Creates a new DriveSubsystem. */
+    public DriveSubsystem() {
 
-    leftPrimaryMotor.follow(ExternalFollower.kFollowerDisabled, 0);
-    rightPrimaryMotor.follow(ExternalFollower.kFollowerDisabled, 0);
+        leftPrimaryMotor.follow(ExternalFollower.kFollowerDisabled, 0);
+        rightPrimaryMotor.follow(ExternalFollower.kFollowerDisabled, 0);
 
-    leftPrimaryMotor.setInverted(DriveConstants.LEFT_MOTOR_REVERSED);
-    leftFollowerMotor.setInverted(DriveConstants.LEFT_MOTOR_REVERSED);
+        leftPrimaryMotor.setInverted(DriveConstants.LEFT_MOTOR_REVERSED);
+        leftFollowerMotor.setInverted(DriveConstants.LEFT_MOTOR_REVERSED);
 
-    rightPrimaryMotor.setInverted(DriveConstants.RIGHT_MOTOR_REVERSED);
-    rightFollowerMotor.setInverted(DriveConstants.RIGHT_MOTOR_REVERSED);
+        rightPrimaryMotor.setInverted(DriveConstants.RIGHT_MOTOR_REVERSED);
+        rightFollowerMotor.setInverted(DriveConstants.RIGHT_MOTOR_REVERSED);
 
-    // Set the drive motors to brake
-    leftPrimaryMotor.setIdleMode(IdleMode.kBrake);
-    leftFollowerMotor.setIdleMode(IdleMode.kBrake);
+        // Set the drive motors to brake
+        leftPrimaryMotor.setIdleMode(IdleMode.kBrake);
+        leftFollowerMotor.setIdleMode(IdleMode.kBrake);
 
-    rightPrimaryMotor.setIdleMode(IdleMode.kBrake);
-    rightFollowerMotor.setIdleMode(IdleMode.kBrake);
-  }
-
-  public void TankDrive (double leftSpeed, double rightSpeed) {
-
-    // Drive the left and right sides of the neos
-    leftPrimaryMotor.set(leftSpeed);
-    leftFollowerMotor.set(leftSpeed);
-    rightPrimaryMotor.set(rightSpeed);
-    rightFollowerMotor.set(rightSpeed);
-  }
-
-  public void ArcadeDrive (double speed, double turn) {
-
-    if (OperatorInput.getSpeedRamp()) {  // here's the error
-      speed = speedRamp(speed);
-      turn = speedRamp(turn);
+        rightPrimaryMotor.setIdleMode(IdleMode.kBrake);
+        rightFollowerMotor.setIdleMode(IdleMode.kBrake);
     }
-    
-    TankDrive((speed + turn), (speed - turn));
-  }
 
-  private double speedRamp(double speed) {
-    if (speed > 0) {
-      return 0.2 * (Math.pow(speed, 3)) + 0.8 * (Math.pow(speed, 2));
-    } else {
-      speed = speed * -1;
+    // FIXME: Methods should have a lower case letter: tankDrive()
+    public void TankDrive(double leftSpeed, double rightSpeed) {
+
+        // Drive the left and right sides of the neos
+        leftPrimaryMotor.set(leftSpeed);
+        leftFollowerMotor.set(leftSpeed);
+        rightPrimaryMotor.set(rightSpeed);
+        rightFollowerMotor.set(rightSpeed);
     }
-    return -1 * (0.2 * (Math.pow(speed, 3)) + 0.8 * (Math.pow(speed, 2)));
-  }
-  
-  public double getLeftEncoder() {
-    return leftEncoder.getPosition();
-  }
 
-  public double getRightEncoder() {
-    return rightEncoder.getPosition();
-  }
+    // FIXME: Methods should have a lower case letter: arcadeDrive()
+    public void ArcadeDrive(double speed, double turn) {
 
-  public double getAverageEncoder() {
-    return (getLeftEncoder() + getRightEncoder()) / 2;
-  }
+        // FIXME: Is this method only called from the DefaultDriveCommand?
+        //
+        // I would move this whole method about ramping into the default
+        // drive command since it is about joystick adjustments/filters.
+        //
+        // Commands are the interfaces between the OperatorInput (OI) and
+        // the subsystems (motors and sensors).
+        //
+        // btw, I am not sure that the drive method belongs here either,
+        // maybe you should be calling set(leftSpeed, rightSpeed) from
+        // the DefaultDriveCommand, and the Tank/Arcade drive calculations
+        // should be in that command as well.
 
-  public double getEncoderDistanceCm() {
-    return getAverageEncoder() * DriveConstants.CM_PER_ENCODER_COUNT;
-  }
+        if (OperatorInput.getSpeedRamp()) { // here's the error
+            speed = speedRamp(speed);
+            turn  = speedRamp(turn);
+        }
 
-  public double getLeftSpeed() {
-    return leftEncoder.getVelocity();
-  }
+        TankDrive((speed + turn), (speed - turn));
+    }
 
-  public double getRightSpeed() {
-    return rightEncoder.getVelocity();
-  }
+    private double speedRamp(double speed) {
 
-  private double getPitch() {
-    return -ahrs.getRoll();
-  }
+        // NOTE: You can use Math.signum() to get the sign +/- 1 of a value
+        // This is a fun formula - never seen this before.
+        //
+        // return Math.signum(speed) * (0.2 * Math.abs(Math.pow(speed, 3))
+        // + 0.8 * Math.pow(speed, 2));
 
-  private double getRoll() {
-    return ahrs.getPitch();
-  }
+        if (speed > 0) {
+            return 0.2 * (Math.pow(speed, 3)) + 0.8 * (Math.pow(speed, 2));
+        }
+        else {
+            speed = speed * -1;
+        }
+        return -1 * (0.2 * (Math.pow(speed, 3)) + 0.8 * (Math.pow(speed, 2)));
+    }
 
-  private double getYaw() {
-    return ahrs.getYaw();
-  }
+    public double getLeftEncoder() {
+        return leftEncoder.getPosition();
+    }
+
+    public double getRightEncoder() {
+        return rightEncoder.getPosition();
+    }
+
+    public double getAverageEncoder() {
+        return (getLeftEncoder() + getRightEncoder()) / 2;
+    }
+
+    public double getEncoderDistanceCm() {
+        return getAverageEncoder() * DriveConstants.CM_PER_ENCODER_COUNT;
+    }
+
+    public double getLeftSpeed() {
+        return leftEncoder.getVelocity();
+    }
+
+    public double getRightSpeed() {
+        return rightEncoder.getVelocity();
+    }
+
+    private double getPitch() {
+        return -ahrs.getRoll();
+    }
+
+    private double getRoll() {
+        return ahrs.getPitch();
+    }
+
+    private double getYaw() {
+        return ahrs.getYaw();
+    }
 
 
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        // FIXME: Put stuff on the SmartDashboard.
 
-  }
+    }
 
 }
