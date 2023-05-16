@@ -5,9 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import frc.robot.Constants.OperatorInputConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -20,34 +17,35 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class RobotContainer {
 
-  // Subsystems
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+    // Subsystems
+    private final DriveSubsystem driveSubsystem = new DriveSubsystem();
 
-  // Driver and operator controllers
-  private final OperatorInput operatorInput = new OperatorInput(
-    OperatorInputConstants.DRIVER_CONTROLLER,
-    OperatorInputConstants.OPERATOR_CONTROLLER
-    );
-
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-
-    // Configure the trigger bindings
-    operatorInput.configureBindings(driveSubsystem);
-
-    
-  }
+    // Driver and operator controllers
+    private final OperatorInput  operatorInput  = new OperatorInput(
+        OperatorInputConstants.DRIVER_CONTROLLER,
+        OperatorInputConstants.OPERATOR_CONTROLLER);
 
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // return Autos.exampleAuto(m_exampleSubsystem);
-    return null;
-  }
+    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    public RobotContainer() {
+
+        // FIXME: Configure the default commands for all subsystems.
+
+        // Configure the trigger bindings
+        operatorInput.configureBindings(driveSubsystem);
+
+
+    }
+
+
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        // An example command will be run in autonomous
+        // return Autos.exampleAuto(m_exampleSubsystem);
+        return null;
+    }
 }
